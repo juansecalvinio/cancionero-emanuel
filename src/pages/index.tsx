@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import { useState, useEffect } from 'react'
 import { Container, Button, Input } from '@chakra-ui/react'
 import Card from 'components/Card'
-import { FilterContainerStyled, SongsContainerStyled } from './index.styled'
+import { FilterContainerStyled, SongsContainerStyled } from './styled'
 
 const SongsPage: NextPage = ({ songsData }: any) => {
 
