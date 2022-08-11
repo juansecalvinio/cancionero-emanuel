@@ -62,8 +62,8 @@ const Card = ({ data }: any) => {
               fontSize={'lg'}
               size="lg"
               rounded={'full'}
-              colorScheme="gray"
-              icon={<FaYoutube />}
+              bgColor={useColorModeValue("#EDF2F7", "red")}
+              icon={<FaYoutube color={useColorModeValue("red", "white")} />}
             />
           </Link>
           <Link
@@ -79,7 +79,8 @@ const Card = ({ data }: any) => {
               size="lg"
               rounded={'full'}
               colorScheme="teal"
-              icon={<FaSpotify />}
+              bgColor={useColorModeValue("#68D391", "teal")}
+              icon={<FaSpotify color={useColorModeValue("black", "white")} />}
             />
           </Link>
         </Stack>

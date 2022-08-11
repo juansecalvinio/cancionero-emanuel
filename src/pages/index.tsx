@@ -1,12 +1,18 @@
 import type { NextPage } from 'next'
 import { useState, useEffect } from 'react'
-import { Container, Button, Input } from '@chakra-ui/react'
+import useSWR from 'swr'
+import { Container, Input } from '@chakra-ui/react'
 import Card from 'components/Card'
 import { FilterContainerStyled, SongsContainerStyled } from 'styles/index.styled'
 
-const SongsPage: NextPage = ({ songsData }: any) => {
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
+
+const SongsPage: NextPage = () => {
+
+  const response = useSWR('api/sheet', fetcher)
 
   const [songs, setSongs] = useState([])
+  const [songsFetched, setSongsFetched] = useState([])
   const [searchValue, setSearchValue] = useState("")
 
   const handleChangeSearchValue = (e: any) => {
@@ -15,23 +21,27 @@ const SongsPage: NextPage = ({ songsData }: any) => {
   }
   
   useEffect(() => {
-    setSongs(songsData.sort((a: any, b: any) => {
-      if (a['Nombre'] > b['Nombre']) return 1
-      if (a['Nombre'] < b['Nombre']) return -1
-      return 0
-    }))
-  }, [songsData])
+    if (!!response.data) {
+      let { data: songs } = response.data
+      songs.sort((a: any, b: any) => {
+        if (a['Nombre'] > b['Nombre']) return 1
+        if (a['Nombre'] < b['Nombre']) return -1
+        return 0
+      })
+      setSongsFetched(songs)
+    }
+  }, [response])
 
   useEffect(() => {
     if (searchValue !== "") {
-      setSongs(songsData.filter((song: any) => {
-        if (song['Nombre'].toLowerCase().includes(searchValue.toLowerCase())) 
-          return song
-      }))
+      const filteredSongs = songsFetched.filter(
+        (song: any) => song['Nombre'].toLowerCase().includes(searchValue.toLowerCase())
+      )
+      setSongs(filteredSongs)
     } else {
-      setSongs(songsData)
+      setSongs(songsFetched)
     }
-  }, [searchValue, songsData])
+  }, [searchValue, songsFetched])
 
 
   return (
@@ -53,15 +63,3 @@ const SongsPage: NextPage = ({ songsData }: any) => {
 }
 
 export default SongsPage
-
-export async function getServerSideProps() {
-  const req = await fetch("http://localhost:3000/api/sheet")
-  const res = await req.json()
-  const { data } = res
-
-  return {
-    props: {
-      songsData: data
-    }
-  }
-}
