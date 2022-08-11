@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "cancionero-jovem",
+  "private_key_id": "2946737d4bece4e02fe9c4032019c2e2a5934dad",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDr3njmJhUTxtxg\ni8LgRPWUzLjHlGeZ0BZjTLHIJDhOenm9SGsxJUZmHpJJ1+4pdp0Bx4uMxUhuJ5Vy\niwpKD8q/vKsJBApO5KHZ9gvLST2dEhL6D4MIFyrto1ZfBrluvHMyY4lv6KsWYU79\ntglebILeBz64gUhECgYMGdz9o7v5nvougRORDki2KMZg3+6EKEG2ldprea+upwDp\n/0URpPf6NZwn5/jB+kjrzsOMOlvlvt4s5pA4B1+byCAClSDY3BaNaUsMx3f7UQwK\n3Q5UOCIIsrW222C8+TxXCJH96P0SVjr8I4VzmWirSC6goVJHPb/Ng/tA3bI6qdRC\n4DvS85ZhAgMBAAECggEAKtCaKQrKIiojmDnecLfLzUwhEYdYi/TYD4PdNJuQhfxY\n61lBLe1ae1B61QEnd+rSQr+uTuoDxQ0V5XIkNr/pmYbdlBgh5+K8F3TAfNDpaIDe\npXoZ2qbb8cGHvN2bXOTD02Z6jPAS2E/nFwpLZpKzaaquga7kB4e7Q8iRExB832lZ\nQfCbHLt2NXt9qJkAz5R1GBwCZ74+xnDPHlNFOMuBzGsr5AR5557iBOXVQajTd3lF\nhhCarSAVI0cREiKhxmzxPM7M4dLQUYEpAUoBpGnk7G1uBDB9zv9Eu4uykjVmTsO4\nwLKlG78C3U047Vs18BoORzoU5uhgcosG9ZtyB7oOLQKBgQD2zR2Chmi3q7dgX7Pg\nz4JNSJdNbhIi+vzLciVtKOGFIFLFKM86AJwIGAto0MrXEXjFCEH7M7lISHRS9IYL\nBKKU0fLO78qwxQGYdAJCGPK7nKNCjuYNAutZVRoSKBxSq0drGmRvSmvDxAAGe+uV\nhNdQZtdp0QQx1tq8CrXtQU8KBQKBgQD0qQvJseIQb8+lG7fYbsC+ISK4GThuughl\n34XibklNdnj5U5stAgGX1xXtJnXkKhUnBXKiw0SUSqUvaQndBZ+Csfz0k3rNrAAW\nezqag0CuGgVWQMO9tcJskD8IfDslVBqhlaf1F+EoEBCKWG3FKq7nfqOR+wJt26gG\nrv9TCS5drQKBgQD0GOzt8uhRePn2zNEJMdPrgjd7crlndZxfz/bqXzumQtD6haFn\n+cBZVQa71X45duNe5Qr1XDQOJPNANO76qMvwqzIesBZl/YPVeC/flfNF0ee7ZcBs\n8A08HqqZeKiCrzsE2GarmAy74/gucZQRHwEiWYUG+J7QeHOA9or3LNfyzQKBgQDk\n9l7FvuclIr5ccfg3YE6YoEHxsAiT9x1s2SZepX+MMtc73fZWxI3hH7SxX1Ds2kU5\nY2vIzp0bek/kcpR8d4qzsQZdjLdcSx856tEJUNPzGv7rnWiR3cu59bRHqJthb7gM\niBXK1TItX/tavS7dWfidRHKnZxT64pn4x0TC3NC7cQKBgQDFkyowNMOtJvwJTh1d\nHvA6dt5ctah9Sf9BxoIRitnH7iaF2ZZxrJ/zhKqSKViJygr25A2E97yseeATkWHj\n5i74SRK5W5c+tmPAxo0OWgbKLFein9npWeaNHx0YPdxeQ+lHvdSRIM5AFk4brrHW\n9xYcY2VBA76zJNH+3bK2ezQ0Bg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "googlesheetreader@cancionero-jovem.iam.gserviceaccount.com",
+  "client_id": "111698316032572875462",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/googlesheetreader%40cancionero-jovem.iam.gserviceaccount.com"
+}
