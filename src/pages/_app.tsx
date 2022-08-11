@@ -22,7 +22,7 @@ import {
   HeaderLogoStyled, 
   HeaderStyled, 
   MainStyled 
-} from "./_app.styled"
+} from "styles/app.styled"
 
 
 const ChakraNextImage = chakra(Image)
