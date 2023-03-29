@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   Badge,
   Box,
@@ -9,16 +9,15 @@ import {
   Stack,
   Text,
   useColorModeValue,
-} from "@chakra-ui/react"
-import { FaSpotify, FaYoutube } from "react-icons/fa"
-
+} from "@chakra-ui/react";
+import { FaSpotify, FaYoutube } from "react-icons/fa";
 
 const Card = ({ data }: any) => {
   return (
     <Center py={6}>
       <Box
         w={"full"}
-        bg={useColorModeValue('white', 'gray.900')}
+        bg={useColorModeValue("white", "gray.900")}
         borderColor={"borderColor"}
         borderWidth={"1px"}
         boxShadow={"0 12px 20px 6px rgb(104 112 118 / 0.08)"}
@@ -26,58 +25,61 @@ const Card = ({ data }: any) => {
         p={6}
         textAlign={"center"}
       >
-        <Heading fontSize={'2xl'} fontFamily={'body'}>
-          {data['Nombre']}
+        <Heading fontSize={"2xl"} fontFamily={"body"}>
+          {/* {data['Nombre']} // Si los datos vienen del Sheet, se buscan las props por nombre de campo */}
+          {data.name}
         </Heading>
-        <Text fontWeight={600} color={'gray.500'} mb={4}>
-          {data['Intérprete']}
+        <Text fontWeight={600} color={"gray.500"} mb={4}>
+          {data.artist}
         </Text>
-        <Stack align={'center'} justify={'center'} direction={'row'} mt={6}>
+        <Stack align={"center"} justify={"center"} direction={"row"} mt={6}>
           <Badge
             px={2}
             py={1}
-            fontWeight={'400'}
-            colorScheme={data['Estilo'] === "Rápida" ? "green" : "red"}
+            fontWeight={"400"}
+            colorScheme={data.style === "Lenta" ? "red" : "green"}
           >
-            <strong>{data['Estilo']}</strong>
+            <strong>{data.style}</strong>
           </Badge>
-          <Badge
-            px={2}
-            py={1}
-            fontWeight={'400'}
-          >
-            TONALIDAD: <strong>{data['Tono']}</strong>
+          <Badge px={2} py={1} fontWeight={"400"}>
+            TONALIDAD: <strong>{data.tone}</strong>
           </Badge>
         </Stack>
-        <Stack mt={8} direction={'row'} align={'center'} justify={'center'}  spacing={4}>
+        <Stack
+          mt={8}
+          direction={"row"}
+          align={"center"}
+          justify={"center"}
+          spacing={4}
+        >
           <Link
-            href={data['Versión YouTube']}
-            display={data['Versión YouTube'].length < 2 ? "none" : ""}
+            href={data.url_youtube}
+            display={data.url_youtube.length < 2 ? "none" : ""}
             isExternal
           >
             <IconButton
-              disabled={data['Versión YouTube'].length < 2}
-              aria-label='youtube-link'
+              disabled={data.url_youtube.length < 2}
+              aria-label="youtube-link"
               flex={1}
-              fontSize={'lg'}
+              fontSize={"lg"}
               size="lg"
-              rounded={'full'}
+              rounded={"full"}
               bgColor={useColorModeValue("#EDF2F7", "red")}
               icon={<FaYoutube color={useColorModeValue("red", "white")} />}
             />
           </Link>
           <Link
-            href={data['Versión Spotify']}
-            display={data['Versión YouTube'].length < 2 ? "none" : ""}
+            href={data.url_spotify}
+            display={data.url_spotify.length < 2 ? "none" : ""}
             isExternal
           >
             <IconButton
-              disabled={data['Versión Spotify'].length < 2}
-              aria-label='spotify-link'
+              disabled={data.url_spotify.length < 2}
+              aria-label="spotify-link"
               flex={1}
-              fontSize={'lg'}
+              fontSize={"lg"}
               size="lg"
-              rounded={'full'}
+              rounded={"full"}
               colorScheme="teal"
               bgColor={useColorModeValue("#68D391", "teal")}
               icon={<FaSpotify color={useColorModeValue("black", "white")} />}
@@ -86,7 +88,7 @@ const Card = ({ data }: any) => {
         </Stack>
       </Box>
     </Center>
-  )
-}
+  );
+};
 
-export default Card
+export default Card;
