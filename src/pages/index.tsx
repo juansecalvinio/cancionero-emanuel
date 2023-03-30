@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useState, useEffect } from "react";
 import useSWR from "swr";
-import { Container, Input, Spinner, Text } from "@chakra-ui/react";
+import { Button, Container, Input, Spinner, Text } from "@chakra-ui/react";
 import Card from "components/Card";
 import {
   FilterContainerStyled,
@@ -9,16 +9,24 @@ import {
   SpinnerContainerStyled,
 } from "styles/index.styled";
 
+import { ModalForm } from "components/ModalForm";
+
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const SongsPage: NextPage = () => {
   // const response = useSWR('api/sheet', fetcher)
-  const response = useSWR("api/songs", fetcher);
 
   const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState(false);
   const [songs, setSongs] = useState([]);
   const [songsFetched, setSongsFetched] = useState([]);
   const [searchValue, setSearchValue] = useState("");
+  const [refreshSongs, setRefreshSongs] = useState(false);
+
+  const response = useSWR(
+    refreshSongs ? "api/songs?refresh=true" : "api/songs",
+    fetcher
+  );
 
   const handleChangeSearchValue = (e: any) => {
     let query = e.target.value;
@@ -28,17 +36,23 @@ const SongsPage: NextPage = () => {
   useEffect(() => {
     if (!!response.data) {
       let { data: songs } = response.data;
-      // songs.sort((a: any, b: any) => {
-      //   if (a["Nombre"] > b["Nombre"]) return 1;
-      //   if (a["Nombre"] < b["Nombre"]) return -1;
-      //   return 0;
-      // });
+      songs.sort((a: any, b: any) => {
+        if (a.name > b.name) return 1;
+        if (a.name < b.name) return -1;
+        return 0;
+      });
       setLoading(false);
       setSongsFetched(songs);
     } else {
       setLoading(true);
     }
   }, [response]);
+
+  useEffect(() => {
+    if (modal === false) {
+      setRefreshSongs((prevState) => !prevState);
+    }
+  }, [modal]);
 
   useEffect(() => {
     if (searchValue !== "") {
@@ -55,6 +69,9 @@ const SongsPage: NextPage = () => {
   return (
     <Container maxW="md" placeContent="center" h="100%" padding={"0"}>
       <FilterContainerStyled>
+        <Button colorScheme="blue" onClick={() => setModal(!modal)}>
+          Agregar nueva canción
+        </Button>
         <Input
           placeholder="Buscá una canción..."
           value={searchValue}
@@ -83,6 +100,8 @@ const SongsPage: NextPage = () => {
           ))}
         </SongsContainerStyled>
       )}
+
+      <ModalForm onClose={() => setModal(!modal)} isOpen={modal} />
     </Container>
   );
 };

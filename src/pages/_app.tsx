@@ -1,41 +1,41 @@
-import React from "react"
-import type { AppProps } from 'next/app'
-import Head from 'next/head'
-import Image from "next/image"
-import { 
+import React from "react";
+import type { AppProps } from "next/app";
+import Head from "next/head";
+import Image from "next/image";
+import {
   Box,
   chakra,
   ChakraProvider,
   Container,
   Heading,
   useColorMode,
-  useColorModeValue
-} from '@chakra-ui/react'
+  useColorModeValue,
+} from "@chakra-ui/react";
 
-import theme from "theme"
+import theme from "theme";
 
-import ToggleColor from 'components/ToggleColor'
+import ToggleColor from "components/ToggleColor";
 
-import { 
-  ContainerStyled, 
-  FooterStyled, 
-  HeaderLogoStyled, 
-  HeaderStyled, 
-  MainStyled 
-} from "styles/app.styled"
+import {
+  ContainerStyled,
+  FooterStyled,
+  HeaderLogoStyled,
+  HeaderStyled,
+  MainStyled,
+} from "styles/app.styled";
 
-
-const ChakraNextImage = chakra(Image)
+const ChakraNextImage = chakra(Image);
 
 function MyApp({ Component, pageProps }: AppProps) {
-  
-  const logoLightSrc = "http://drive.google.com/uc?export=view&id=1oD8_BN_Zf-IIBVB28pbs6fKYwpQ21K6f"
-  const logoDarkSrc = "http://drive.google.com/uc?export=view&id=1zYEQw7XgzW7rovJPLSk3gqwHo-sT4Pg5"
-  const logoSrc = useColorModeValue(logoLightSrc, logoDarkSrc)
-  
+  const logoLightSrc =
+    "http://drive.google.com/uc?export=view&id=1oD8_BN_Zf-IIBVB28pbs6fKYwpQ21K6f";
+  const logoDarkSrc =
+    "http://drive.google.com/uc?export=view&id=1zYEQw7XgzW7rovJPLSk3gqwHo-sT4Pg5";
+  const logoSrc = useColorModeValue(logoLightSrc, logoDarkSrc);
+
   return (
     <ChakraProvider theme={theme}>
-      <Container maxW="md" h='calc(100vh)'>
+      <Container maxW="md" h="calc(100vh)">
         <Head>
           <title>Songbook JovEm</title>
           <meta name="description" content="Cancionero de JovEm" />
@@ -68,7 +68,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         </ContainerStyled>
       </Container>
     </ChakraProvider>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;
