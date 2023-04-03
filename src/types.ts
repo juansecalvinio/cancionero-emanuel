@@ -1,22 +1,12 @@
+export type StyleSong = "Rápida" | "Lenta" | "Intermedia";
 export interface SongData {
-  _id: {},
-  title: string,
-  author: string,
-  tone: string,
-  youtube_link: string,
-  spotify_link: string,
-  style: StyleSong
+  id: number;
+  title: string;
+  artist: string;
+  tone: string;
+  style: StyleSong;
+  url_youtube: string;
+  url_spotify: string;
 }
 
-export type NewSongData = Omit<SongData, "_id">
-
-export interface UpdateSongData {
-  title?: string,
-  author?: string,
-  tone?: string,
-  youtube_link?: string,
-  spotify_link?: string,
-  style?: StyleSong
-}
-
-export type StyleSong = "Rápida" | "Lenta";
+export type UpsertSongData = Omit<SongData, "id">;
