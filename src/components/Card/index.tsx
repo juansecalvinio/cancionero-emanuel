@@ -16,7 +16,7 @@ import { SongData } from "types";
 
 type CardProps = {
   data: SongData;
-  onEdit: () => void;
+  onEdit: (data: SongData) => void;
   onDelete: (id: number) => void;
 };
 
@@ -69,7 +69,7 @@ const Card: React.FC<CardProps> = ({ data, onDelete, onEdit }) => {
         >
           <IconButton
             icon={<EditIcon />}
-            onClick={onEdit}
+            onClick={() => onEdit(data)}
             aria-label="editar"
           />
           <Link

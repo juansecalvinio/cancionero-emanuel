@@ -20,6 +20,7 @@ import {
 import { ModalForm } from "components/ModalForm";
 import { ModalDelete } from "components/ModalDelete";
 import { supabase } from "utils/supabase";
+import { SongData } from "types";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -35,6 +36,7 @@ const SongsPage: NextPage = () => {
   const [songs, setSongs] = useState([]);
   const [songsFetched, setSongsFetched] = useState([]);
   const [songToDelete, setSongToDelete] = useState(0);
+  const [songToEdit, setSongToEdit] = useState<SongData | undefined>(undefined);
   const [refreshSongs, setRefreshSongs] = useState(false);
 
   const response = useSWR(
@@ -48,13 +50,22 @@ const SongsPage: NextPage = () => {
   };
 
   const onModalClose = () => {
+    setSongToEdit(undefined);
     setModal(!modal);
   };
 
-  const onModalSuccess = () => {
-    onModalClose();
-    setAlertSuccessMessage("Agregaste una nueva canción!");
+  const onModalSuccess = (isNewSong: boolean) => {
+    setSongToEdit(undefined);
+    setModal(!modal);
+
+    if (isNewSong) {
+      setAlertSuccessMessage("Agregaste una nueva canción!");
+    } else {
+      setAlertSuccessMessage("Se modificaron los datos de la canción");
+    }
+
     setAlertSuccess(true);
+
     setTimeout(() => {
       setAlertSuccess(false);
     }, 3000);
@@ -65,12 +76,8 @@ const SongsPage: NextPage = () => {
   };
 
   const onModalDeleteSuccess = async () => {
-    /** Lógica de elimiar  */
     try {
-      const { data, error } = await supabase
-        .from("songs")
-        .delete()
-        .eq("id", songToDelete);
+      await supabase.from("songs").delete().eq("id", songToDelete);
       onModalDeleteClose();
       setAlertSuccessMessage("Se eliminó la canción correctamente");
       setAlertSuccess(true);
@@ -83,13 +90,13 @@ const SongsPage: NextPage = () => {
   };
 
   const onClickDelete = (id: number) => {
-    console.log("🚀 ~ file: index.tsx:78 ~ onClickDelete ~ id:", id);
     setSongToDelete(id);
-    setModalDelete(true);
+    setModalDelete(!modalDelete);
   };
 
-  const onClickEdit = () => {
-    console.log("click edit");
+  const onClickEdit = (data: SongData) => {
+    setSongToEdit(data);
+    setModal(!modal);
   };
 
   useEffect(() => {
@@ -111,7 +118,6 @@ const SongsPage: NextPage = () => {
   useEffect(() => {
     if (searchValue !== "") {
       const filteredSongs = songsFetched.filter((song: any) =>
-        // song["Nombre"].toLowerCase().includes(searchValue.toLowerCase())
         song.title.toLowerCase().includes(searchValue.toLowerCase())
       );
       setSongs(filteredSongs);
@@ -169,7 +175,7 @@ const SongsPage: NextPage = () => {
       <ModalForm
         onClose={onModalClose}
         onSuccess={onModalSuccess}
-        // dataToEdit={}
+        dataToEdit={songToEdit}
         isOpen={modal}
       />
 

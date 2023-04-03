@@ -6,6 +6,7 @@ export default async function handler(_req: any, res: any) {
       .from("songs")
       .select()
       .order("title", { ascending: true });
+    songs?.sort((a, b) => a.title.localeCompare(b.title));
     return res.status(200).send({ error, data: songs });
   } catch (e: any) {
     return res

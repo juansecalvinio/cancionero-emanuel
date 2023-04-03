@@ -22,7 +22,7 @@ type ModalProps = {
   isOpen: boolean;
   dataToEdit?: SongData;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (isNewSong: boolean) => void;
 };
 
 // TODO: Mostrar algún mensaje o Toast luego de ingresar una canción, y lo mismo en caso de Error
@@ -40,6 +40,17 @@ export const ModalForm: React.FC<ModalProps> = ({
   const [songStyle, setSongStyle] = useState("");
   const [songYoutube, setSongYoutube] = useState("");
   const [songSpotify, setSongSpotify] = useState("");
+
+  const isEditable = typeof dataToEdit !== "undefined" ? true : false;
+
+  const resetFields = () => {
+    setSongTitle("");
+    setSongArtist("");
+    setSongTone("");
+    setSongStyle("");
+    setSongYoutube("");
+    setSongSpotify("");
+  };
 
   const handleChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
     setSongTitle(event.target.value);
@@ -81,8 +92,8 @@ export const ModalForm: React.FC<ModalProps> = ({
   };
 
   const handleSubmit = async () => {
-    let formValue = {
-      name: songTitle,
+    let formValues = {
+      title: songTitle,
       artist: songArtist,
       tone: songTone,
       style: songStyle,
@@ -90,10 +101,20 @@ export const ModalForm: React.FC<ModalProps> = ({
       url_spotify: songSpotify,
     };
 
-    if (validateSongTitle(formValue.name)) {
+    if (validateSongTitle(formValues.title)) {
+      let isNewSong = true;
       try {
-        await supabase.from("songs").insert([formValue]);
-        onSuccess();
+        if (isEditable) {
+          isNewSong = false;
+          await supabase
+            .from("songs")
+            .update([formValues])
+            .eq("id", dataToEdit?.id);
+        } else {
+          await supabase.from("songs").insert([formValues]);
+        }
+        resetFields();
+        onSuccess(isNewSong);
       } catch (error) {
         console.error(error);
       }
@@ -101,16 +122,10 @@ export const ModalForm: React.FC<ModalProps> = ({
   };
 
   useEffect(() => {
-    setSongTitle("");
-    setSongTitleError("");
-    setSongArtist("");
-    setSongTone("");
-    setSongStyle("");
-    setSongYoutube("");
-    setSongSpotify("");
-  }, [onClose]);
-
-  useEffect(() => {
+    console.log(
+      "🚀 ~ file: index.tsx:116 ~ useEffect ~ dataToEdit:",
+      dataToEdit
+    );
     if (typeof dataToEdit !== "undefined") {
       setSongTitle(dataToEdit.title);
       setSongArtist(dataToEdit.artist);
@@ -118,6 +133,8 @@ export const ModalForm: React.FC<ModalProps> = ({
       setSongStyle(dataToEdit.style);
       setSongYoutube(dataToEdit.url_youtube);
       setSongSpotify(dataToEdit.url_spotify);
+    } else {
+      resetFields();
     }
   }, [dataToEdit]);
 
@@ -130,7 +147,9 @@ export const ModalForm: React.FC<ModalProps> = ({
     >
       <ModalOverlay />
       <ModalContent m={"16px"}>
-        <ModalHeader>Ingresá la nueva canción</ModalHeader>
+        <ModalHeader>
+          {isEditable ? "Editar canción" : "Nueva canción"}
+        </ModalHeader>
         <ModalCloseButton />
 
         <ModalBody>
@@ -165,6 +184,7 @@ export const ModalForm: React.FC<ModalProps> = ({
               placeholder="Tonalidad"
               color={songTone === "" ? "gray.400" : "fieldtext"}
               onChange={handleSelectTone}
+              value={songTone.toLowerCase()}
             >
               <option value="a">A</option>
               <option value="a#">A#</option>
@@ -186,6 +206,7 @@ export const ModalForm: React.FC<ModalProps> = ({
               placeholder="Estilo"
               color={songStyle === "" ? "gray.400" : "fieldtext"}
               onChange={handleSelectStyle}
+              value={songStyle.toLowerCase()}
             >
               <option value="lenta">Lenta</option>
               <option value="intermedia">Intermedia</option>
@@ -217,7 +238,7 @@ export const ModalForm: React.FC<ModalProps> = ({
             Cancelar
           </Button>
           <Button colorScheme="blue" onClick={handleSubmit}>
-            Agregar
+            {isEditable ? "Editar" : "Agregar"}
           </Button>
         </ModalFooter>
       </ModalContent>
