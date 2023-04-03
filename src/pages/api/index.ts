@@ -1,3 +1,1 @@
-export default function handler(req: any, res: any) {
-
-}
+export default function handler(req: any, res: any) {}
