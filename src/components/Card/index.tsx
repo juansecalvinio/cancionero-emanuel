@@ -10,9 +10,24 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { FaSpotify, FaYoutube } from "react-icons/fa";
+import { SongData } from "types";
 
-const Card = ({ data }: any) => {
+type CardProps = {
+  data: SongData;
+  onEdit: () => void;
+  onDelete: (id: number) => void;
+};
+
+const Card: React.FC<CardProps> = ({ data, onDelete, onEdit }) => {
+  const getColorBadge = (songStyle: string) => {
+    if (!songStyle || typeof songStyle === "undefined") return "";
+    if (songStyle.toLowerCase() === "rápida") return "green";
+    if (songStyle.toLowerCase() === "intermedia") return "yellow";
+    if (songStyle.toLowerCase() === "lenta") return "red";
+  };
+
   return (
     <Center py={6}>
       <Box
@@ -27,7 +42,7 @@ const Card = ({ data }: any) => {
       >
         <Heading fontSize={"2xl"} fontFamily={"body"}>
           {/* {data['Nombre']} // Si los datos vienen del Sheet, se buscan las props por nombre de campo */}
-          {data.name}
+          {data.title}
         </Heading>
         <Text fontWeight={600} color={"gray.500"} mb={4}>
           {data.artist}
@@ -37,7 +52,7 @@ const Card = ({ data }: any) => {
             px={2}
             py={1}
             fontWeight={"400"}
-            colorScheme={data.style === "Lenta" ? "red" : "green"}
+            colorScheme={getColorBadge(data.style)}
           >
             <strong>{data.style}</strong>
           </Badge>
@@ -52,6 +67,11 @@ const Card = ({ data }: any) => {
           justify={"center"}
           spacing={4}
         >
+          <IconButton
+            icon={<EditIcon />}
+            onClick={onEdit}
+            aria-label="editar"
+          />
           <Link
             href={data.url_youtube}
             display={data.url_youtube.length < 2 ? "none" : ""}
@@ -64,8 +84,10 @@ const Card = ({ data }: any) => {
               fontSize={"lg"}
               size="lg"
               rounded={"full"}
-              bgColor={useColorModeValue("#EDF2F7", "red")}
-              icon={<FaYoutube color={useColorModeValue("red", "white")} />}
+              bgColor={"red"}
+              icon={<FaYoutube color={"#EDF2F7"} />}
+              // bgColor={useColorModeValue("#EDF2F7", "red")}
+              // icon={<FaYoutube color={useColorModeValue("red", "white")} />}
             />
           </Link>
           <Link
@@ -85,6 +107,11 @@ const Card = ({ data }: any) => {
               icon={<FaSpotify color={useColorModeValue("black", "white")} />}
             />
           </Link>
+          <IconButton
+            icon={<DeleteIcon />}
+            onClick={() => onDelete(data.id)}
+            aria-label="eliminar"
+          />
         </Stack>
       </Box>
     </Center>

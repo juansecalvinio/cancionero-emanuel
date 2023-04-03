@@ -17,5 +17,5 @@ export const SpinnerContainerStyled = styled.div`
 export const FilterContainerStyled = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 1.5rem;
 `;

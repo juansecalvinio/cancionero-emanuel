@@ -4,9 +4,9 @@ export interface SongData {
   title: string;
   artist: string;
   tone: string;
-  urlYoutube: string;
-  urlSpotify: string;
   style: StyleSong;
+  url_youtube: string;
+  url_spotify: string;
 }
 
 export type UpsertSongData = Omit<SongData, "id">;

@@ -2,7 +2,10 @@ import { supabase } from "../../../utils/supabase";
 
 export default async function handler(_req: any, res: any) {
   try {
-    const { data: songs, error } = await supabase.from("songs").select();
+    const { data: songs, error } = await supabase
+      .from("songs")
+      .select()
+      .order("title", { ascending: true });
     return res.status(200).send({ error, data: songs });
   } catch (e: any) {
     return res
