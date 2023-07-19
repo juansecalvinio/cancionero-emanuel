@@ -25,8 +25,6 @@ import { SongData } from "types";
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const SongsPage: NextPage = () => {
-  // const response = useSWR('api/sheet', fetcher)
-
   const [alertSuccess, setAlertSuccess] = useState(false);
   const [alertSuccessMessage, setAlertSuccessMessage] = useState("");
   const [loading, setLoading] = useState(true);
@@ -101,13 +99,13 @@ const SongsPage: NextPage = () => {
 
   useEffect(() => {
     if (!!response.data) {
-      let { data: songs } = response.data;
+      let songs = response.data;
       setLoading(false);
       setSongsFetched(songs);
     } else {
       setLoading(true);
     }
-  }, [response]);
+  }, [response.data]);
 
   useEffect(() => {
     if (modal === false || modalDelete === false) {
@@ -158,10 +156,9 @@ const SongsPage: NextPage = () => {
         </SpinnerContainerStyled>
       )}
 
-      {!loading && (
+      {!loading && songs?.length > 0 && (
         <SongsContainerStyled>
           {songs.map((song: any) => (
-            // <Card key={song.Nombre} data={song} />
             <Card
               key={song.id}
               data={song}
@@ -169,6 +166,15 @@ const SongsPage: NextPage = () => {
               onDelete={onClickDelete}
             />
           ))}
+        </SongsContainerStyled>
+      )}
+
+      {!loading && songs?.length === 0 && (
+        <SongsContainerStyled>
+          <Alert status="warning">
+            <AlertIcon />
+            {"No se encontraron canciones"}
+          </Alert>
         </SongsContainerStyled>
       )}
 

@@ -53,7 +53,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                   src={logoSrc} 
                 />
               </Box> */}
-              <Heading>Songbook</Heading>
+              <Heading>Cancionero</Heading>
             </HeaderLogoStyled>
             <ToggleColor />
           </HeaderStyled>
