@@ -1,21 +1,14 @@
 import React from "react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import Image from "next/image";
 import {
-  Box,
-  chakra,
   ChakraProvider,
   Container,
   Heading,
-  useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
-
-import theme from "theme";
-
+import { ToastContainer } from "react-toastify";
 import ToggleColor from "components/ToggleColor";
-
 import {
   ContainerStyled,
   FooterStyled,
@@ -24,7 +17,9 @@ import {
   MainStyled,
 } from "styles/app.styled";
 
-const ChakraNextImage = chakra(Image);
+import theme from "theme";
+
+import "react-toastify/dist/ReactToastify.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const logoLightSrc =
@@ -37,7 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ChakraProvider theme={theme}>
       <Container maxW="md" h="calc(100vh)">
         <Head>
-          <title>Songbook JovEm</title>
+          <title>Cancionero</title>
           <meta name="description" content="Cancionero de JovEm" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
@@ -45,15 +40,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <ContainerStyled>
           <HeaderStyled>
             <HeaderLogoStyled>
-              {/* <Box w={"100px"} h={"100px"} position={"relative"}>
-                <ChakraNextImage 
-                  alt="logo"
-                  objectFit={"cover"}
-                  layout={"fill"}
-                  src={logoSrc} 
-                />
-              </Box> */}
-              <Heading>Songbook</Heading>
+              <Heading>Cancionero</Heading>
             </HeaderLogoStyled>
             <ToggleColor />
           </HeaderStyled>
@@ -65,6 +52,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           <FooterStyled>
             <p>Powered by @juansecalvinio</p>
           </FooterStyled>
+
+          <ToastContainer />
         </ContainerStyled>
       </Container>
     </ChakraProvider>

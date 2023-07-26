@@ -9,21 +9,28 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const { id } = req.query;
+
   try {
     if (req.method === "GET") {
-      const songs = await songService.getAllSongs();
-      return res.status(200).json(songs);
+      const song = await songService.getSongById(id as string);
+      return res.status(200).json(song);
     }
 
-    if (req.method === "POST") {
-      const song = await songService.createSong(req.body);
-      return res.status(201).json(song);
+    if (req.method === "PUT") {
+      const song = await songService.updateSong({
+        ...req.body,
+        id: id as string,
+      });
+      return res.status(200).json(song);
     }
 
-    return res
-      .setHeader("Allow", ["GET", "POST"])
-      .status(405)
-      .end(`Method ${req.method} Not Allowed`);
+    if (req.method === "DELETE") {
+      await songService.deleteSong(id as string);
+      return res.status(204).end();
+    }
+
+    return res.setHeader("Allow", ["GET", "PUT", "DELETE"]);
   } catch (error: any) {
     return res
       .status(500)
