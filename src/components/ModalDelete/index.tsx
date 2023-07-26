@@ -2,7 +2,6 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 
 import {
   Button,
-  Input,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -10,8 +9,6 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  FormControl,
-  Select,
   Text,
 } from "@chakra-ui/react";
 

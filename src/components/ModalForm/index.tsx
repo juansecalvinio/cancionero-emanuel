@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-
+import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
 import {
   Button,
   Input,
@@ -15,17 +16,19 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { supabase } from "utils/supabase";
-import { SongData } from "types";
+import { SupabaseSongRepository } from "infrastructure/db/SupabaseSongRepository";
+import { SongService } from "application/services/SongService";
+import { Song } from "domain/entities/Song";
+
+const songRepository = new SupabaseSongRepository();
+const songService = new SongService(songRepository);
 
 type ModalProps = {
   isOpen: boolean;
-  dataToEdit?: SongData;
+  dataToEdit?: Song;
   onClose: () => void;
   onSuccess: (isNewSong: boolean) => void;
 };
-
-// TODO: Mostrar algún mensaje o Toast luego de ingresar una canción, y lo mismo en caso de Error
 
 export const ModalForm: React.FC<ModalProps> = ({
   isOpen = false,
@@ -33,6 +36,7 @@ export const ModalForm: React.FC<ModalProps> = ({
   onClose,
   onSuccess,
 }) => {
+  const [songUuid, setSongUuid] = useState("");
   const [songTitle, setSongTitle] = useState("");
   const [songTitleError, setSongTitleError] = useState("");
   const [songArtist, setSongArtist] = useState("");
@@ -44,6 +48,7 @@ export const ModalForm: React.FC<ModalProps> = ({
   const isEditable = typeof dataToEdit !== "undefined" ? true : false;
 
   const resetFields = () => {
+    setSongUuid(uuidv4());
     setSongTitle("");
     setSongArtist("");
     setSongTone("");
@@ -92,7 +97,8 @@ export const ModalForm: React.FC<ModalProps> = ({
   };
 
   const handleSubmit = async () => {
-    let formValues = {
+    let formValues: Song = {
+      id: songUuid,
       title: songTitle,
       artist: songArtist,
       tone: songTone,
@@ -106,27 +112,31 @@ export const ModalForm: React.FC<ModalProps> = ({
       try {
         if (isEditable) {
           isNewSong = false;
-          await supabase
-            .from("songs")
-            .update([formValues])
-            .eq("id", dataToEdit?.id);
+          await songService.updateSong(formValues);
         } else {
-          await supabase.from("songs").insert([formValues]);
+          await songService.createSong(formValues);
         }
         resetFields();
         onSuccess(isNewSong);
       } catch (error) {
         console.error(error);
+        toast.error("Ocurrió un error, intentá de nuevo en unos minutos", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       }
     }
   };
 
   useEffect(() => {
-    console.log(
-      "🚀 ~ file: index.tsx:116 ~ useEffect ~ dataToEdit:",
-      dataToEdit
-    );
     if (typeof dataToEdit !== "undefined") {
+      setSongUuid(dataToEdit.id);
       setSongTitle(dataToEdit.title);
       setSongArtist(dataToEdit.artist);
       setSongTone(dataToEdit.tone);

@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import useSWR from "swr";
 import {
   Alert,
@@ -19,25 +20,26 @@ import {
 
 import { ModalForm } from "components/ModalForm";
 import { ModalDelete } from "components/ModalDelete";
-import { supabase } from "utils/supabase";
-import { SongData } from "types";
+
+import { SupabaseSongRepository } from "infrastructure/db/SupabaseSongRepository";
+import { SongService } from "application/services/SongService";
+import { Song } from "domain/entities/Song";
+
+const songRepository = new SupabaseSongRepository();
+const songService = new SongService(songRepository);
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const SongsPage: NextPage = () => {
-  // const response = useSWR('api/sheet', fetcher)
-
-  const [alertSuccess, setAlertSuccess] = useState(false);
-  const [alertSuccessMessage, setAlertSuccessMessage] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [modal, setModal] = useState(false);
-  const [modalDelete, setModalDelete] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
-  const [songs, setSongs] = useState([]);
-  const [songsFetched, setSongsFetched] = useState([]);
-  const [songToDelete, setSongToDelete] = useState(0);
-  const [songToEdit, setSongToEdit] = useState<SongData | undefined>(undefined);
-  const [refreshSongs, setRefreshSongs] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [modal, setModal] = useState<boolean>(false);
+  const [modalDelete, setModalDelete] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [songs, setSongs] = useState<Song[]>([]);
+  const [songsFetched, setSongsFetched] = useState<Song[]>([]);
+  const [songToDelete, setSongToDelete] = useState<string>("");
+  const [songToEdit, setSongToEdit] = useState<Song | undefined>(undefined);
+  const [refreshSongs, setRefreshSongs] = useState<boolean>(false);
 
   const response = useSWR(
     refreshSongs ? "api/songs?refresh=true" : "api/songs",
@@ -51,24 +53,31 @@ const SongsPage: NextPage = () => {
 
   const onModalClose = () => {
     setSongToEdit(undefined);
-    setModal(!modal);
+    setModal(false);
   };
 
   const onModalSuccess = (isNewSong: boolean) => {
     setSongToEdit(undefined);
-    setModal(!modal);
+    setModal(false);
+
+    let toastMessage;
 
     if (isNewSong) {
-      setAlertSuccessMessage("Agregaste una nueva canción!");
+      toastMessage = "Agregaste una nueva canción!";
     } else {
-      setAlertSuccessMessage("Se modificaron los datos de la canción");
+      toastMessage = "Se modificaron los datos de la canción";
     }
 
-    setAlertSuccess(true);
-
-    setTimeout(() => {
-      setAlertSuccess(false);
-    }, 3000);
+    toast.success(toastMessage, {
+      position: "bottom-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
   };
 
   const onModalDeleteClose = () => {
@@ -77,37 +86,52 @@ const SongsPage: NextPage = () => {
 
   const onModalDeleteSuccess = async () => {
     try {
-      await supabase.from("songs").delete().eq("id", songToDelete);
+      await songService.deleteSong(songToDelete);
       onModalDeleteClose();
-      setAlertSuccessMessage("Se eliminó la canción correctamente");
-      setAlertSuccess(true);
-      setTimeout(() => {
-        setAlertSuccess(false);
-      }, 3000);
+      toast.success("Se eliminó la canción correctamente", {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     } catch (error) {
       console.error(error);
+      toast.error("Ocurrió un error, intentá de nuevo en unos minutos", {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
   };
 
-  const onClickDelete = (id: number) => {
+  const onClickDelete = (id: string) => {
     setSongToDelete(id);
     setModalDelete(!modalDelete);
   };
 
-  const onClickEdit = (data: SongData) => {
+  const onClickEdit = (data: Song) => {
     setSongToEdit(data);
     setModal(!modal);
   };
 
   useEffect(() => {
     if (!!response.data) {
-      let { data: songs } = response.data;
+      let songs = response.data;
       setLoading(false);
       setSongsFetched(songs);
     } else {
       setLoading(true);
     }
-  }, [response]);
+  }, [response.data]);
 
   useEffect(() => {
     if (modal === false || modalDelete === false) {
@@ -129,12 +153,6 @@ const SongsPage: NextPage = () => {
   return (
     <Container maxW="md" placeContent="center" h="100%" padding={"0"}>
       <FilterContainerStyled>
-        {alertSuccess && (
-          <Alert status="success">
-            <AlertIcon />
-            {alertSuccessMessage}
-          </Alert>
-        )}
         <Button colorScheme="blue" onClick={() => setModal(!modal)}>
           Agregar nueva canción
         </Button>
@@ -158,10 +176,9 @@ const SongsPage: NextPage = () => {
         </SpinnerContainerStyled>
       )}
 
-      {!loading && (
+      {!loading && songs?.length > 0 && (
         <SongsContainerStyled>
           {songs.map((song: any) => (
-            // <Card key={song.Nombre} data={song} />
             <Card
               key={song.id}
               data={song}
@@ -169,6 +186,15 @@ const SongsPage: NextPage = () => {
               onDelete={onClickDelete}
             />
           ))}
+        </SongsContainerStyled>
+      )}
+
+      {!loading && songs?.length === 0 && (
+        <SongsContainerStyled>
+          <Alert status="warning">
+            <AlertIcon />
+            {"No se encontraron canciones"}
+          </Alert>
         </SongsContainerStyled>
       )}
 

@@ -12,12 +12,12 @@ import {
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { FaSpotify, FaYoutube } from "react-icons/fa";
-import { SongData } from "types";
+import { Song } from "domain/entities/Song";
 
 type CardProps = {
-  data: SongData;
-  onEdit: (data: SongData) => void;
-  onDelete: (id: number) => void;
+  data: Song;
+  onEdit: (data: Song) => void;
+  onDelete: (id: string) => void;
 };
 
 const Card: React.FC<CardProps> = ({ data, onDelete, onEdit }) => {
@@ -41,7 +41,6 @@ const Card: React.FC<CardProps> = ({ data, onDelete, onEdit }) => {
         textAlign={"center"}
       >
         <Heading fontSize={"2xl"} fontFamily={"body"}>
-          {/* {data['Nombre']} // Si los datos vienen del Sheet, se buscan las props por nombre de campo */}
           {data.title}
         </Heading>
         <Text fontWeight={600} color={"gray.500"} mb={4}>
