@@ -11,11 +11,11 @@ export class SongService {
     return this.songRepository.getSongById(id);
   }
 
-  async createSong(song: Song): Promise<Song> {
+  async createSong(song: Song): Promise<void> {
     return this.songRepository.createSong(song);
   }
 
-  async updateSong(song: Song): Promise<Song> {
+  async updateSong(song: Song): Promise<void> {
     return this.songRepository.updateSong(song);
   }
 

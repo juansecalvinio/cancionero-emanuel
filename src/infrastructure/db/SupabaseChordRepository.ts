@@ -20,21 +20,17 @@ export class SupabaseChordRepository implements ChordRepository {
     return data as Chord[];
   }
 
-  async createChord(chord: Chord): Promise<Chord> {
-    const { data, error } = await supabase.from("chords").insert(chord);
+  async createChord(chord: Chord): Promise<void> {
+    const { error } = await supabase.from("chords").insert(chord);
     if (error) throw error;
-    if (!data) throw "No se encontraron datos";
-    return data[0] as Chord;
   }
 
-  async updateChord(chord: Chord): Promise<Chord> {
-    const { data, error } = await supabase
+  async updateChord(chord: Chord): Promise<void> {
+    const { error } = await supabase
       .from("chords")
       .update(chord)
       .eq("id", chord.id);
     if (error) throw error;
-    if (!data) throw "No se encontraron datos";
-    return data[0] as Chord;
   }
 
   async deleteChord(id: string): Promise<void> {

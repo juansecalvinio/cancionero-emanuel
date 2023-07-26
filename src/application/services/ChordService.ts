@@ -14,11 +14,11 @@ export class ChordService {
     return this.chordRepository.getChordsBySongId(song_id);
   }
 
-  async createChord(chord: Chord): Promise<Chord> {
+  async createChord(chord: Chord): Promise<void> {
     return this.chordRepository.createChord(chord);
   }
 
-  async updateChord(chord: Chord): Promise<Chord> {
+  async updateChord(chord: Chord): Promise<void> {
     return this.chordRepository.updateChord(chord);
   }
 
