@@ -11,7 +11,7 @@ export interface Song {
 export interface SongRepository {
   getAllSongs(): Promise<Song[]>;
   getSongById(id: string): Promise<Song>;
-  createSong(song: Song): Promise<Song>;
-  updateSong(song: Song): Promise<Song>;
+  createSong(song: Song): Promise<void>;
+  updateSong(song: Song): Promise<void>;
   deleteSong(id: string): Promise<void>;
 }

@@ -5,7 +5,7 @@ export class SupabaseSongRepository implements SongRepository {
   async getAllSongs(): Promise<Song[]> {
     const { data, error } = await supabase.from("songs").select("*");
     if (error) throw error;
-    return data;
+    return data as Song[];
   }
 
   async getSongById(id: string): Promise<Song> {
@@ -14,22 +14,21 @@ export class SupabaseSongRepository implements SongRepository {
       .select("*")
       .eq("id", id);
     if (error) throw error;
-    return data[0];
+    if (!data) throw "No se encontraron datos";
+    return data[0] as Song;
   }
 
-  async createSong(song: Song): Promise<Song> {
-    const { data, error } = await supabase.from("songs").insert(song);
+  async createSong(song: Song): Promise<void> {
+    const { error } = await supabase.from("songs").insert(song);
     if (error) throw error;
-    return data[0];
   }
 
-  async updateSong(song: Song): Promise<Song> {
-    const { data, error } = await supabase
+  async updateSong(song: Song): Promise<void> {
+    const { error } = await supabase
       .from("songs")
       .update(song)
       .eq("id", song.id);
     if (error) throw error;
-    return data[0];
   }
 
   async deleteSong(id: string): Promise<void> {
