@@ -14,6 +14,7 @@ import {
   FormControl,
   Select,
   Text,
+  Textarea,
 } from "@chakra-ui/react";
 
 import { SupabaseSongRepository } from "infrastructure/db/SupabaseSongRepository";
@@ -36,14 +37,17 @@ export const ModalForm: React.FC<ModalProps> = ({
   onClose,
   onSuccess,
 }) => {
-  const [songUuid, setSongUuid] = useState("");
-  const [songTitle, setSongTitle] = useState("");
-  const [songTitleError, setSongTitleError] = useState("");
-  const [songArtist, setSongArtist] = useState("");
-  const [songTone, setSongTone] = useState("");
-  const [songStyle, setSongStyle] = useState("");
-  const [songYoutube, setSongYoutube] = useState("");
-  const [songSpotify, setSongSpotify] = useState("");
+  const [songUuid, setSongUuid] = useState<string>("");
+  const [songTitle, setSongTitle] = useState<string>("");
+  const [songTitleError, setSongTitleError] = useState<string>("");
+  const [songArtist, setSongArtist] = useState<string>("");
+  const [songTone, setSongTone] = useState<string>("");
+  const [songStyle, setSongStyle] = useState<string>("");
+  const [songYoutube, setSongYoutube] = useState<string>("");
+  const [songSpotify, setSongSpotify] = useState<string>("");
+  const [songLyrics, setSongLyrics] = useState<string>("");
+
+  const [spinnerButton, setSpinnerButton] = useState<boolean>(false);
 
   const isEditable = typeof dataToEdit !== "undefined" ? true : false;
 
@@ -55,6 +59,7 @@ export const ModalForm: React.FC<ModalProps> = ({
     setSongStyle("");
     setSongYoutube("");
     setSongSpotify("");
+    setSongLyrics("");
   };
 
   const handleChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
@@ -96,6 +101,10 @@ export const ModalForm: React.FC<ModalProps> = ({
     setSongSpotify(event.target.value);
   };
 
+  const handleChangeLyrics = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setSongLyrics(event.target.value);
+  };
+
   const handleSubmit = async () => {
     let formValues: Song = {
       id: songUuid,
@@ -105,10 +114,12 @@ export const ModalForm: React.FC<ModalProps> = ({
       style: songStyle,
       url_youtube: songYoutube,
       url_spotify: songSpotify,
+      lyrics: songLyrics,
     };
 
     if (validateSongTitle(formValues.title)) {
       let isNewSong = true;
+      setSpinnerButton(true);
       try {
         if (isEditable) {
           isNewSong = false;
@@ -117,8 +128,10 @@ export const ModalForm: React.FC<ModalProps> = ({
           await songService.createSong(formValues);
         }
         resetFields();
+        setSpinnerButton(false);
         onSuccess(isNewSong);
       } catch (error) {
+        setSpinnerButton(false);
         console.error(error);
         toast.error("Ocurrió un error, intentá de nuevo en unos minutos", {
           position: "bottom-center",
@@ -143,6 +156,7 @@ export const ModalForm: React.FC<ModalProps> = ({
       setSongStyle(dataToEdit.style);
       setSongYoutube(dataToEdit.url_youtube);
       setSongSpotify(dataToEdit.url_spotify);
+      setSongLyrics(dataToEdit.lyrics);
     } else {
       resetFields();
     }
@@ -241,13 +255,26 @@ export const ModalForm: React.FC<ModalProps> = ({
               onChange={handleChangeSpotify}
             />
           </FormControl>
+
+          <FormControl mt={4}>
+            <Textarea
+              placeholder="Letras y acordes"
+              _placeholder={{ opacity: 1, color: "gray.400" }}
+              value={songLyrics}
+              onChange={handleChangeLyrics}
+            />
+          </FormControl>
         </ModalBody>
 
         <ModalFooter>
           <Button variant="ghost" mr={3} onClick={onClose}>
             Cancelar
           </Button>
-          <Button colorScheme="blue" onClick={handleSubmit}>
+          <Button
+            colorScheme="blue"
+            onClick={handleSubmit}
+            isLoading={spinnerButton}
+          >
             {isEditable ? "Editar" : "Agregar"}
           </Button>
         </ModalFooter>

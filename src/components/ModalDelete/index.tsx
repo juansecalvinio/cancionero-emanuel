@@ -14,12 +14,14 @@ import {
 
 type ModalProps = {
   isOpen: boolean;
+  isLoading: boolean;
   onClose: () => void;
   onSuccess: () => void;
 };
 
 export const ModalDelete: React.FC<ModalProps> = ({
   isOpen = false,
+  isLoading,
   onClose,
   onSuccess,
 }) => {
@@ -43,7 +45,7 @@ export const ModalDelete: React.FC<ModalProps> = ({
           <Button variant="ghost" mr={3} onClick={onClose}>
             Cancelar
           </Button>
-          <Button colorScheme="red" onClick={onSuccess}>
+          <Button colorScheme="red" onClick={onSuccess} isLoading={isLoading}>
             Eliminar
           </Button>
         </ModalFooter>

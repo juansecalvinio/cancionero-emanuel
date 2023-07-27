@@ -18,7 +18,7 @@ export const HeaderLogoStyled = styled.div`
 `;
 
 export const MainStyled = styled.main`
-  padding: 2rem 0;
+  padding-top: 1rem;
   flex: 1;
   display: flex;
   flex-direction: column;
