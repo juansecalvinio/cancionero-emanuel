@@ -6,6 +6,7 @@ export class Song {
   url_youtube: string;
   url_spotify: string;
   style: string;
+  lyrics: string;
 
   constructor(
     id: string,
@@ -14,7 +15,8 @@ export class Song {
     tone: string,
     url_youtube: string,
     url_spotify: string,
-    style: string
+    style: string,
+    lyrics: string
   ) {
     this.id = id;
     this.title = title;
@@ -23,5 +25,6 @@ export class Song {
     this.url_youtube = url_youtube;
     this.url_spotify = url_spotify;
     this.style = style;
+    this.lyrics = lyrics;
   }
 }

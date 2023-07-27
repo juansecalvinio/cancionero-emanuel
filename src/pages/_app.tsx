@@ -50,7 +50,12 @@ function MyApp({ Component, pageProps }: AppProps) {
           </MainStyled>
 
           <FooterStyled>
-            <p>Powered by @juansecalvinio</p>
+            <p>
+              Powered by{" "}
+              <a href="https://github.com/juansecalvinio" target="_blank">
+                @juansecalvinio
+              </a>
+            </p>
           </FooterStyled>
 
           <ToastContainer />

@@ -6,6 +6,7 @@ export interface Song {
   url_youtube: string;
   url_spotify: string;
   style: string;
+  lyrics: string;
 }
 
 export interface SongRepository {

@@ -34,6 +34,7 @@ const SongsPage: NextPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [modal, setModal] = useState<boolean>(false);
   const [modalDelete, setModalDelete] = useState<boolean>(false);
+  const [modalDeleteLoading, setModalDeleteLoading] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
   const [songs, setSongs] = useState<Song[]>([]);
   const [songsFetched, setSongsFetched] = useState<Song[]>([]);
@@ -85,8 +86,10 @@ const SongsPage: NextPage = () => {
   };
 
   const onModalDeleteSuccess = async () => {
+    setModalDeleteLoading(true);
     try {
       await songService.deleteSong(songToDelete);
+      setModalDeleteLoading(false);
       onModalDeleteClose();
       toast.success("Se eliminó la canción correctamente", {
         position: "bottom-center",
@@ -99,6 +102,7 @@ const SongsPage: NextPage = () => {
         theme: "colored",
       });
     } catch (error) {
+      setModalDeleteLoading(false);
       console.error(error);
       toast.error("Ocurrió un error, intentá de nuevo en unos minutos", {
         position: "bottom-center",
@@ -207,6 +211,7 @@ const SongsPage: NextPage = () => {
 
       <ModalDelete
         isOpen={modalDelete}
+        isLoading={modalDeleteLoading}
         onClose={onModalDeleteClose}
         onSuccess={onModalDeleteSuccess}
       />

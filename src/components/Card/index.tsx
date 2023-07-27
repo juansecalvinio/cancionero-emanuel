@@ -1,4 +1,5 @@
 import React from "react";
+import LinkNext from "next/link";
 import {
   Badge,
   Box,
@@ -29,7 +30,7 @@ const Card: React.FC<CardProps> = ({ data, onDelete, onEdit }) => {
   };
 
   return (
-    <Center py={6}>
+    <Center py={3}>
       <Box
         w={"full"}
         bg={useColorModeValue("white", "gray.900")}
@@ -40,9 +41,13 @@ const Card: React.FC<CardProps> = ({ data, onDelete, onEdit }) => {
         p={6}
         textAlign={"center"}
       >
-        <Heading fontSize={"2xl"} fontFamily={"body"}>
-          {data.title}
-        </Heading>
+        <LinkNext href={`/song/${data.id}`}>
+          <a>
+            <Heading fontSize={"2xl"} fontFamily={"body"}>
+              {data.title}
+            </Heading>
+          </a>
+        </LinkNext>
         <Text fontWeight={600} color={"gray.500"} mb={4}>
           {data.artist}
         </Text>
