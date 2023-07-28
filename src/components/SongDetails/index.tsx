@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { MouseEvent, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 import {
+  Box,
   Button,
   Container,
   Divider,
@@ -11,11 +14,13 @@ import {
 } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { FaSpotify, FaYoutube } from "react-icons/fa";
+
 import { SongService } from "application/services/SongService";
 import { Song } from "domain/entities/Song";
 import { SupabaseSongRepository } from "infrastructure/db/SupabaseSongRepository";
 import { parseLyricsToSave, parseLyricsToView } from "utils/parseLyrics";
 import { transposeChord, transposeSong } from "utils/transposer";
+
 import {
   ActionsWrapper,
   ChangeToneWrapper,
@@ -23,7 +28,7 @@ import {
   LinksWrapper,
   TitleWrapper,
 } from "./styled";
-import { toast } from "react-toastify";
+import { ModalChangeTone } from "components/ModalChangeTone";
 
 const songRepository = new SupabaseSongRepository();
 const songService = new SongService(songRepository);
@@ -33,13 +38,24 @@ interface SongDetailsProps {
 }
 
 export const SongDetails = ({ song }: SongDetailsProps) => {
+  const router = useRouter();
+
+  const [spinnerButton, setSpinnerButton] = useState<boolean>(false);
+  const [isModalChangeTone, setIsModalChangeTone] = useState<boolean>(false);
   const [semitones, setSemitones] = useState<number>(0);
   const [tone, setTone] = useState<string>(song.tone);
   const [lyrics, setLyrics] = useState(
     parseLyricsToView(song.lyrics ? song.lyrics : "")
   );
 
-  const [spinnerButton, setSpinnerButton] = useState<boolean>(false);
+  const handleOnBack = (e: MouseEvent<HTMLButtonElement>) => {
+    if (song.tone !== tone) {
+      e.preventDefault();
+      setIsModalChangeTone(true);
+    } else {
+      router.push("/");
+    }
+  };
 
   const handleDownSemitone = () => {
     setSemitones((prevState) => prevState - 1);
@@ -74,6 +90,7 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
         lyrics: transposedLyrics,
       });
       setSpinnerButton(false);
+      setIsModalChangeTone(false);
       toast.success(`Se cambió la tonalidad de la canción a: ${tone}`, {
         position: "bottom-center",
         autoClose: 5000,
@@ -84,6 +101,7 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
         progress: undefined,
         theme: "colored",
       });
+      router.push("/");
     } catch (error) {
       setSpinnerButton(false);
       console.error(error);
@@ -103,23 +121,24 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
   return (
     <Container
       maxW="md"
+      position={"relative"}
       placeContent="flex-start"
       h="100%"
-      padding={"0"}
+      padding={"0 0 3rem 0"}
       display={"flex"}
       flexDirection={"column"}
       gap={"1rem"}
     >
-      <Link href="/">
-        <Button
-          colorScheme="teal"
-          variant="link"
-          size="xs"
-          leftIcon={<ArrowBackIcon />}
-        >
-          Volver
-        </Button>
-      </Link>
+      <Button
+        colorScheme="teal"
+        variant="link"
+        size="sm"
+        leftIcon={<ArrowBackIcon />}
+        onClick={handleOnBack}
+        mr={"auto"}
+      >
+        Volver
+      </Button>
       <HeaderWrapper>
         <TitleWrapper>
           <Heading fontSize={"2xl"} fontFamily={"body"}>
@@ -170,32 +189,55 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
         </LinksWrapper>
       </HeaderWrapper>
       <Divider />
-      <ActionsWrapper>
-        <ChangeToneWrapper>
-          <Text fontSize={"0.85rem"} mb={1.5}>
-            Cambiar tonalidad:
-          </Text>
-          <Button size={"sm"} onClick={handleDownSemitone} mr={"1rem"}>
-            -1
-          </Button>
-          <Button size={"sm"} onClick={handleUpSemitone}>
-            +1
-          </Button>
-        </ChangeToneWrapper>
-        <Button
-          colorScheme="teal"
-          size={"sm"}
-          onClick={handleSaveTransposedSong}
-          isLoading={spinnerButton}
+      <ActionsWrapper
+        bgColor={useColorModeValue("white", "gray.800")}
+        borderTop={"2px solid"}
+        borderTopColor={useColorModeValue("gray.200", "gray.600")}
+        zIndex={10}
+        px={4}
+      >
+        <Box
+          maxW="md"
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+          w={"100%"}
         >
-          Guardar
-        </Button>
+          <ChangeToneWrapper>
+            <Text fontSize={"0.85rem"} mb={1.5}>
+              Cambiar tonalidad:
+            </Text>
+            <Button
+              colorScheme={"yellow"}
+              size={"sm"}
+              onClick={handleDownSemitone}
+              mr={"1rem"}
+            >
+              -1
+            </Button>
+            <Button
+              colorScheme={"yellow"}
+              size={"sm"}
+              onClick={handleUpSemitone}
+            >
+              +1
+            </Button>
+          </ChangeToneWrapper>
+          <Button
+            colorScheme="teal"
+            size={"sm"}
+            onClick={handleSaveTransposedSong}
+            isLoading={spinnerButton}
+          >
+            Guardar
+          </Button>
+        </Box>
       </ActionsWrapper>
       <div>
         {lyrics.map((line: any, i: any) => (
           <div
             key={i}
-            style={{ marginBottom: line.lyrics === "" ? "3em" : "1em" }}
+            style={{ marginBottom: line.lyrics === "" ? "3rem" : "0.25rem" }}
           >
             <pre style={{ fontFamily: "monospace", fontWeight: "bold" }}>
               {line.chords.map((chord: any, j: any) => (
@@ -203,8 +245,8 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
                   key={j}
                   style={{
                     position: "relative",
-                    left: chord.position * 0.6 + "ch",
-                    fontSize: "1.25em",
+                    left: chord.position * 5 + "px",
+                    fontSize: "0.85rem",
                   }}
                 >
                   {chord.chord}
@@ -215,6 +257,14 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
           </div>
         ))}
       </div>
+
+      <ModalChangeTone
+        isOpen={isModalChangeTone}
+        isLoading={spinnerButton}
+        tone={tone}
+        onClose={() => setIsModalChangeTone(false)}
+        onSuccess={handleSaveTransposedSong}
+      />
     </Container>
   );
 };

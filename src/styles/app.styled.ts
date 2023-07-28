@@ -4,7 +4,6 @@ export const ContainerStyled = styled.div`
   display: grid;
   grid-template-rows: 100px 1fr 100px;
   height: 100%;
-  padding: 1rem;
 `;
 
 export const HeaderStyled = styled.header`
@@ -18,7 +17,6 @@ export const HeaderLogoStyled = styled.div`
 `;
 
 export const MainStyled = styled.main`
-  padding-top: 1rem;
   flex: 1;
   display: flex;
   flex-direction: column;
