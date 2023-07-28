@@ -136,6 +136,7 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
         leftIcon={<ArrowBackIcon />}
         onClick={handleOnBack}
         mr={"auto"}
+        mb={"0.5rem"}
       >
         Volver
       </Button>
@@ -204,7 +205,7 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
           w={"100%"}
         >
           <ChangeToneWrapper>
-            <Text fontSize={"0.85rem"} mb={1.5}>
+            <Text fontSize={"0.85rem"} mb={1.5} fontWeight={"bold"}>
               Cambiar tonalidad:
             </Text>
             <Button
