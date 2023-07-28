@@ -14,10 +14,6 @@ export function parseLyricsToView(text: string) {
       .trim();
     return { lyrics, chords };
   });
-  console.log(
-    "🚀 ~ file: parseLyrics.ts:17 ~ parsedLines ~ parsedLines:",
-    parsedLines
-  );
 
   return parsedLines;
 }
