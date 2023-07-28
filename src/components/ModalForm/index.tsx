@@ -170,7 +170,7 @@ export const ModalForm: React.FC<ModalProps> = ({
       onClose={onClose}
     >
       <ModalOverlay />
-      <ModalContent m={"16px"}>
+      <ModalContent m={"16px"} maxHeight="600px" overflowY="auto">
         <ModalHeader>
           {isEditable ? "Editar canción" : "Nueva canción"}
         </ModalHeader>
@@ -178,8 +178,11 @@ export const ModalForm: React.FC<ModalProps> = ({
 
         <ModalBody>
           <FormControl>
+            <Text color={"gray.500"} fontWeight={600}>
+              Título
+            </Text>
             <Input
-              placeholder="Título"
+              placeholder="Ingresá el título de la canción"
               _placeholder={{ opacity: 1, color: "gray.400" }}
               value={songTitle}
               onBlur={handleBlurTitle}
@@ -195,8 +198,11 @@ export const ModalForm: React.FC<ModalProps> = ({
           </FormControl>
 
           <FormControl mt={4}>
+            <Text color={"gray.500"} fontWeight={600}>
+              Artista
+            </Text>
             <Input
-              placeholder="Artista"
+              placeholder="Ingresá el nombre del artista"
               _placeholder={{ opacity: 1, color: "gray.400" }}
               value={songArtist}
               onChange={handleChangeArtist}
@@ -204,30 +210,36 @@ export const ModalForm: React.FC<ModalProps> = ({
           </FormControl>
 
           <FormControl mt={4}>
+            <Text color={"gray.500"} fontWeight={600}>
+              Tonalidad
+            </Text>
             <Select
-              placeholder="Tonalidad"
+              placeholder="Selecciona la tonalidad"
               color={songTone === "" ? "gray.400" : "fieldtext"}
               onChange={handleSelectTone}
               value={songTone.toLowerCase()}
             >
-              <option value="a">A</option>
-              <option value="a#">A#</option>
-              <option value="b">B</option>
-              <option value="c">C</option>
-              <option value="c#">C#</option>
-              <option value="d">D</option>
-              <option value="d#">D#</option>
-              <option value="e">E</option>
-              <option value="f">F</option>
-              <option value="f#">F#</option>
-              <option value="g">G</option>
-              <option value="g#">G#</option>
+              <option value="do">DO</option>
+              <option value="do#">DO#</option>
+              <option value="re">RE</option>
+              <option value="re#">RE#</option>
+              <option value="mi">MI</option>
+              <option value="fa">FA</option>
+              <option value="fa#">FA#</option>
+              <option value="sol">SOL</option>
+              <option value="sol#">SOL#</option>
+              <option value="la">LA</option>
+              <option value="la#">LA#</option>
+              <option value="si">SI</option>
             </Select>
           </FormControl>
 
           <FormControl mt={4}>
+            <Text color={"gray.500"} fontWeight={600}>
+              Estilo
+            </Text>
             <Select
-              placeholder="Estilo"
+              placeholder="Selecciona el estilo"
               color={songStyle === "" ? "gray.400" : "fieldtext"}
               onChange={handleSelectStyle}
               value={songStyle.toLowerCase()}
@@ -239,8 +251,11 @@ export const ModalForm: React.FC<ModalProps> = ({
           </FormControl>
 
           <FormControl mt={4}>
+            <Text color={"gray.500"} fontWeight={600}>
+              YouTube
+            </Text>
             <Input
-              placeholder="Link de YouTube"
+              placeholder="Pegá el link de YouTube"
               _placeholder={{ opacity: 1, color: "gray.400" }}
               value={songYoutube}
               onChange={handleChangeYoutube}
@@ -248,8 +263,11 @@ export const ModalForm: React.FC<ModalProps> = ({
           </FormControl>
 
           <FormControl mt={4}>
+            <Text color={"gray.500"} fontWeight={600}>
+              Spotify
+            </Text>
             <Input
-              placeholder="Link de Spotify"
+              placeholder="Pegá el link de Spotify"
               _placeholder={{ opacity: 1, color: "gray.400" }}
               value={songSpotify}
               onChange={handleChangeSpotify}
@@ -257,11 +275,15 @@ export const ModalForm: React.FC<ModalProps> = ({
           </FormControl>
 
           <FormControl mt={4}>
+            <Text color={"gray.500"} fontWeight={600}>
+              Letra y acordes
+            </Text>
             <Textarea
-              placeholder="Letras y acordes"
+              placeholder="Escribí la letra y los acordes de la canción"
               _placeholder={{ opacity: 1, color: "gray.400" }}
               value={songLyrics}
               onChange={handleChangeLyrics}
+              resize={"vertical"}
             />
           </FormControl>
         </ModalBody>
