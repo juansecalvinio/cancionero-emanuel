@@ -48,7 +48,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Container maxW="md" h="calc(100vh)">
         <Head>
           <title>Cancionero</title>
-          <meta name="description" content="Cancionero de JovEm" />
+          <meta name="description" content="Cancionero de Emanuel" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
