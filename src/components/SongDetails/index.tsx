@@ -44,6 +44,7 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
   const [isModalChangeTone, setIsModalChangeTone] = useState<boolean>(false);
   const [semitones, setSemitones] = useState<number>(0);
   const [tone, setTone] = useState<string>(song.tone);
+  const [typeChords, setTypeChords] = useState<"american" | "spain">("spain");
   const [lyrics, setLyrics] = useState(
     parseLyricsToView(song.lyrics ? song.lyrics : "")
   );
@@ -57,24 +58,32 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
     }
   };
 
+  const switchTypeChords = () => {
+    setTypeChords((prevState) =>
+      prevState === "american" ? "spain" : "american"
+    );
+  };
+
   const handleDownSemitone = () => {
     setSemitones((prevState) => prevState - 1);
-    setTone(transposeChord({ chord: tone, semitones: -1 }));
+    setTone(transposeChord({ chord: tone, semitones: -1, typeChords }));
 
     const trasposedChords = transposeSong({
       lyrics,
       semitones: -1,
+      typeChords,
     });
     setLyrics(trasposedChords);
   };
 
   const handleUpSemitone = () => {
     setSemitones((prevState) => prevState + 1);
-    setTone(transposeChord({ chord: tone, semitones: +1 }));
+    setTone(transposeChord({ chord: tone, semitones: +1, typeChords }));
 
     const trasposedChords = transposeSong({
       lyrics,
       semitones: 1,
+      typeChords,
     });
     setLyrics(trasposedChords);
   };
@@ -82,7 +91,11 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
   const handleSaveTransposedSong = async () => {
     setSpinnerButton(true);
     const transposedLyrics = parseLyricsToSave(lyrics);
-    const transposedTone = transposeChord({ chord: song.tone, semitones });
+    const transposedTone = transposeChord({
+      chord: song.tone,
+      semitones,
+      typeChords,
+    });
     try {
       await songService.updateSong({
         ...song,
@@ -118,6 +131,15 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
     }
   };
 
+  useEffect(() => {
+    const lyricsWithNewTypeChords = transposeSong({
+      lyrics,
+      semitones: 0,
+      typeChords,
+    });
+    setLyrics(lyricsWithNewTypeChords);
+  }, [typeChords]);
+
   return (
     <Container
       maxW="md"
@@ -152,42 +174,52 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
             Tonalidad de la canción: <strong>{tone}</strong>
           </Text>
         </TitleWrapper>
-        <LinksWrapper>
-          <Link
-            href={song.url_youtube}
-            display={song.url_youtube.length < 2 ? "none" : ""}
-            isExternal
-          >
-            <IconButton
-              disabled={song.url_youtube.length < 2}
-              aria-label="youtube-link"
-              flex={1}
-              fontSize={"lg"}
-              size="sm"
-              rounded={"full"}
-              bgColor={useColorModeValue("#EDF2F7", "red")}
-              icon={<FaYoutube color={useColorModeValue("red", "white")} />}
-              mr={"0.5rem"}
-            />
-          </Link>
-          <Link
-            href={song.url_spotify}
-            display={song.url_spotify.length < 2 ? "none" : ""}
-            isExternal
-          >
-            <IconButton
-              disabled={song.url_spotify.length < 2}
-              aria-label="spotify-link"
-              flex={1}
-              fontSize={"lg"}
-              size="sm"
-              rounded={"full"}
-              colorScheme="teal"
-              bgColor={useColorModeValue("#68D391", "teal")}
-              icon={<FaSpotify color={useColorModeValue("black", "white")} />}
-            />
-          </Link>
-        </LinksWrapper>
+        <Box
+          display={"flex"}
+          flexDirection={"column"}
+          justifyContent={"space-between"}
+          height={100}
+        >
+          <LinksWrapper>
+            <Link
+              href={song.url_youtube}
+              display={song.url_youtube.length < 2 ? "none" : ""}
+              isExternal
+            >
+              <IconButton
+                disabled={song.url_youtube.length < 2}
+                aria-label="youtube-link"
+                flex={1}
+                fontSize={"lg"}
+                size="sm"
+                rounded={"full"}
+                bgColor={useColorModeValue("#EDF2F7", "red")}
+                icon={<FaYoutube color={useColorModeValue("red", "white")} />}
+                mr={"0.5rem"}
+              />
+            </Link>
+            <Link
+              href={song.url_spotify}
+              display={song.url_spotify.length < 2 ? "none" : ""}
+              isExternal
+            >
+              <IconButton
+                disabled={song.url_spotify.length < 2}
+                aria-label="spotify-link"
+                flex={1}
+                fontSize={"lg"}
+                size="sm"
+                rounded={"full"}
+                colorScheme="teal"
+                bgColor={useColorModeValue("#68D391", "teal")}
+                icon={<FaSpotify color={useColorModeValue("black", "white")} />}
+              />
+            </Link>
+          </LinksWrapper>
+          {/* <Button size={"xs"} onClick={switchTypeChords}>
+            Cifrado
+          </Button> */}
+        </Box>
       </HeaderWrapper>
       <Divider />
       <ActionsWrapper
@@ -234,36 +266,54 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
           </Button>
         </Box>
       </ActionsWrapper>
-      <div>
+      <Box>
         {lyrics.map((line: any, i: any) => (
           <div
             key={i}
             style={{ marginBottom: line.lyrics === "" ? "2rem" : "0.25rem" }}
           >
-            <pre style={{ fontFamily: "monospace", fontWeight: "bold" }}>
-              {line.chords.map((chord: any, j: any) => (
-                <span
-                  key={j}
-                  style={{
-                    position: "relative",
-                    left: chord.position * 5 + "px",
-                    fontSize: "0.85rem",
-                  }}
-                >
-                  {chord.chord}
-                </span>
-              ))}
+            <pre
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                fontFamily: "monospace",
+                fontWeight: "bold",
+              }}
+            >
+              {line.chords.map((chord: any, j: any) => {
+                const marginLeft =
+                  j === 0
+                    ? chord.position * 6
+                    : (chord.position - line.chords[j - 1].position) * 3;
+                return (
+                  <div
+                    key={j}
+                    style={{
+                      display: "inline-block",
+                      marginLeft: marginLeft + "px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      {chord.chord}
+                    </span>
+                  </div>
+                );
+              })}
             </pre>
             <p>{line.lyrics}</p>
           </div>
         ))}
-      </div>
+      </Box>
 
       <ModalChangeTone
         isOpen={isModalChangeTone}
         isLoading={spinnerButton}
         tone={tone}
-        onClose={() => setIsModalChangeTone(false)}
+        onClose={() => router.push("/")}
         onSuccess={handleSaveTransposedSong}
       />
     </Container>

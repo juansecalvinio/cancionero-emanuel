@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import LinkNext from "next/link";
 import {
   Badge,
@@ -22,6 +22,9 @@ type CardProps = {
 };
 
 const Card: React.FC<CardProps> = ({ data, onDelete, onEdit }) => {
+  const [isYouTubeHovered, setIsYouTubeHovered] = useState<boolean>(false);
+  const [isSpotifyHovered, setIsSpotifyHovered] = useState<boolean>(false);
+
   const getColorBadge = (songStyle: string) => {
     if (!songStyle || typeof songStyle === "undefined") return "";
     if (songStyle.toLowerCase() === "rápida") return "green";
@@ -88,10 +91,11 @@ const Card: React.FC<CardProps> = ({ data, onDelete, onEdit }) => {
               fontSize={"lg"}
               size="lg"
               rounded={"full"}
-              bgColor={"red"}
+              colorScheme="red"
+              bgColor={isYouTubeHovered ? "red.200" : "red.500"}
               icon={<FaYoutube color={"#EDF2F7"} />}
-              // bgColor={useColorModeValue("#EDF2F7", "red")}
-              // icon={<FaYoutube color={useColorModeValue("red", "white")} />}
+              onMouseEnter={() => setIsYouTubeHovered(true)}
+              onMouseLeave={() => setIsYouTubeHovered(false)}
             />
           </Link>
           <Link
@@ -108,7 +112,17 @@ const Card: React.FC<CardProps> = ({ data, onDelete, onEdit }) => {
               rounded={"full"}
               colorScheme="teal"
               bgColor={useColorModeValue("#68D391", "teal")}
-              icon={<FaSpotify color={useColorModeValue("black", "white")} />}
+              icon={
+                <FaSpotify
+                  color={
+                    isSpotifyHovered
+                      ? "#EDF2F7"
+                      : useColorModeValue("black", "#EDF2F7")
+                  }
+                />
+              }
+              onMouseEnter={() => setIsSpotifyHovered(true)}
+              onMouseLeave={() => setIsSpotifyHovered(false)}
             />
           </Link>
           <IconButton

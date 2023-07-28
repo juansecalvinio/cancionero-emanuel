@@ -12,7 +12,12 @@ export const HeaderWrapper = styled.div`
   justify-content: space-between;
 `;
 
-export const TitleWrapper = styled.div``;
+export const TitleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+`;
 
 export const LinksWrapper = styled.div`
   gap: 0.5rem;
