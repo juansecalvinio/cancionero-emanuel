@@ -271,7 +271,7 @@ export const ModalForm: React.FC<ModalProps> = ({
             Cancelar
           </Button>
           <Button
-            colorScheme="blue"
+            colorScheme="teal"
             onClick={handleSubmit}
             isLoading={spinnerButton}
           >

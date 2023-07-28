@@ -157,7 +157,7 @@ const SongsPage: NextPage = () => {
   return (
     <Container maxW="md" placeContent="center" h="100%" padding={"0"}>
       <FilterContainerStyled>
-        <Button colorScheme="blue" onClick={() => setModal(!modal)}>
+        <Button colorScheme="teal" onClick={() => setModal(!modal)}>
           Agregar nueva canción
         </Button>
         <Input
@@ -173,7 +173,7 @@ const SongsPage: NextPage = () => {
             thickness="4px"
             speed="0.65s"
             emptyColor="gray.200"
-            color="blue.500"
+            color="teal.500"
             size="xl"
           />
           <Text fontSize={"lg"}>Cargando...</Text>

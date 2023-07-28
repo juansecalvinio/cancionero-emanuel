@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
+import { Router } from "next/router";
 import {
   ChakraProvider,
   Container,
   Heading,
-  useColorModeValue,
+  Spinner,
+  Text,
 } from "@chakra-ui/react";
 import { ToastContainer } from "react-toastify";
 import ToggleColor from "components/ToggleColor";
+
 import {
   ContainerStyled,
   FooterStyled,
@@ -16,17 +19,29 @@ import {
   HeaderStyled,
   MainStyled,
 } from "styles/app.styled";
+import { SpinnerContainerStyled } from "styles/index.styled";
 
 import theme from "theme";
 
 import "react-toastify/dist/ReactToastify.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const logoLightSrc =
-    "http://drive.google.com/uc?export=view&id=1oD8_BN_Zf-IIBVB28pbs6fKYwpQ21K6f";
-  const logoDarkSrc =
-    "http://drive.google.com/uc?export=view&id=1zYEQw7XgzW7rovJPLSk3gqwHo-sT4Pg5";
-  const logoSrc = useColorModeValue(logoLightSrc, logoDarkSrc);
+  const [loading, setLoading] = useState(false);
+
+  const startLoading = () => setLoading(true);
+  const stopLoading = () => setLoading(false);
+
+  useEffect(() => {
+    Router.events.on("routeChangeStart", startLoading);
+    Router.events.on("routeChangeComplete", stopLoading);
+    Router.events.on("routeChangeError", stopLoading);
+
+    return () => {
+      Router.events.off("routeChangeStart", startLoading);
+      Router.events.off("routeChangeComplete", stopLoading);
+      Router.events.off("routeChangeError", stopLoading);
+    };
+  }, []);
 
   return (
     <ChakraProvider theme={theme}>
@@ -40,13 +55,25 @@ function MyApp({ Component, pageProps }: AppProps) {
         <ContainerStyled>
           <HeaderStyled>
             <HeaderLogoStyled>
-              <Heading>Cancionero</Heading>
+              <Heading size="md">Cancionero</Heading>
             </HeaderLogoStyled>
             <ToggleColor />
           </HeaderStyled>
 
           <MainStyled>
-            <Component {...pageProps} />
+            {loading && (
+              <SpinnerContainerStyled>
+                <Spinner
+                  thickness="4px"
+                  speed="0.65s"
+                  emptyColor="gray.200"
+                  color="teal.500"
+                  size="xl"
+                />
+                <Text fontSize={"lg"}>Cargando...</Text>
+              </SpinnerContainerStyled>
+            )}
+            {!loading && <Component {...pageProps} />}
           </MainStyled>
 
           <FooterStyled>

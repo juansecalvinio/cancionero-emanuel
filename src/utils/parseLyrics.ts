@@ -1,5 +1,6 @@
 export function parseLyricsToView(text: string) {
   const lines = text.split("\n");
+
   const parsedLines = lines.map((line) => {
     if (line.trim() === "") {
       return { lyrics: "", chords: [] };
