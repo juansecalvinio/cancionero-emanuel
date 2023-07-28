@@ -238,7 +238,7 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
         {lyrics.map((line: any, i: any) => (
           <div
             key={i}
-            style={{ marginBottom: line.lyrics === "" ? "3rem" : "0.25rem" }}
+            style={{ marginBottom: line.lyrics === "" ? "2rem" : "0.25rem" }}
           >
             <pre style={{ fontFamily: "monospace", fontWeight: "bold" }}>
               {line.chords.map((chord: any, j: any) => (
