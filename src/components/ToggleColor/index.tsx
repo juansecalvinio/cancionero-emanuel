@@ -9,7 +9,8 @@ const ToggleColor = () => {
       onClick={toggleColorMode}
       aria-label={useColorModeValue("Modo oscuro", "Modo claro")}
       icon={useColorModeValue(<MoonIcon />, <SunIcon />)}
-      size={"xs"}
+      size={"sm"}
+      ml={"0.5rem"}
     />
   );
 };
