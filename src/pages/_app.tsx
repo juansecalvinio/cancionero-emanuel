@@ -64,7 +64,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 <IconButton
                   aria-label={"Ayuda"}
                   icon={<QuestionOutlineIcon />}
-                  size={"xs"}
+                  size={"sm"}
                 />
               </Link>
               <ToggleColor />
