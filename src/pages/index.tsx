@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import useSWR from "swr";
 import {
   Alert,
@@ -10,6 +9,7 @@ import {
   Input,
   Spinner,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import Card from "components/Card";
 import {
@@ -31,6 +31,8 @@ const songService = new SongService(songRepository);
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const SongsPage: NextPage = () => {
+  const toast = useToast();
+
   const [loading, setLoading] = useState<boolean>(true);
   const [modal, setModal] = useState<boolean>(false);
   const [modalDelete, setModalDelete] = useState<boolean>(false);
@@ -69,15 +71,12 @@ const SongsPage: NextPage = () => {
       toastMessage = "Se modificaron los datos de la canción";
     }
 
-    toast.success(toastMessage, {
-      position: "bottom-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
+    toast({
+      title: toastMessage,
+      position: "bottom",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
     });
   };
 
@@ -91,28 +90,22 @@ const SongsPage: NextPage = () => {
       await songService.deleteSong(songToDelete);
       setModalDeleteLoading(false);
       onModalDeleteClose();
-      toast.success("Se eliminó la canción correctamente", {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
+      toast({
+        title: "Se eliminó la canción correctamente",
+        position: "bottom",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
       });
     } catch (error) {
       setModalDeleteLoading(false);
       console.error(error);
-      toast.error("Ocurrió un error, intentá de nuevo en unos minutos", {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
+      toast({
+        title: "Ocurrió un error, intentá de nuevo en unos minutos",
+        position: "bottom",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
       });
     }
   };

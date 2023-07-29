@@ -15,6 +15,7 @@ import {
   Select,
   Text,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 
 import { SupabaseSongRepository } from "infrastructure/db/SupabaseSongRepository";
@@ -37,6 +38,8 @@ export const ModalForm: React.FC<ModalProps> = ({
   onClose,
   onSuccess,
 }) => {
+  const toast = useToast();
+
   const [songUuid, setSongUuid] = useState<string>("");
   const [songTitle, setSongTitle] = useState<string>("");
   const [songTitleError, setSongTitleError] = useState<string>("");
@@ -133,15 +136,12 @@ export const ModalForm: React.FC<ModalProps> = ({
       } catch (error) {
         setSpinnerButton(false);
         console.error(error);
-        toast.error("Ocurrió un error, intentá de nuevo en unos minutos", {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
+        toast({
+          title: "Ocurrió un error, intentá de nuevo en unos minutos",
+          position: "bottom",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
         });
       }
     }
@@ -279,7 +279,7 @@ export const ModalForm: React.FC<ModalProps> = ({
               Letra y acordes
             </Text>
             <Textarea
-              placeholder="Escribí la letra y los acordes de la canción"
+              placeholder="Los acordes van entre corchetes al lado de cada palabra"
               _placeholder={{ opacity: 1, color: "gray.400" }}
               value={songLyrics}
               onChange={handleChangeLyrics}

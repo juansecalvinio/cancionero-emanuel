@@ -3,13 +3,15 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { Router } from "next/router";
 import {
+  Box,
   ChakraProvider,
   Container,
   Heading,
+  IconButton,
   Spinner,
   Text,
 } from "@chakra-ui/react";
-import { ToastContainer } from "react-toastify";
+
 import ToggleColor from "components/ToggleColor";
 
 import {
@@ -22,8 +24,8 @@ import {
 import { SpinnerContainerStyled } from "styles/index.styled";
 
 import theme from "theme";
-
-import "react-toastify/dist/ReactToastify.css";
+import Link from "next/link";
+import { QuestionOutlineIcon } from "@chakra-ui/icons";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(false);
@@ -57,7 +59,16 @@ function MyApp({ Component, pageProps }: AppProps) {
             <HeaderLogoStyled>
               <Heading size="md">Cancionero</Heading>
             </HeaderLogoStyled>
-            <ToggleColor />
+            <Box>
+              <Link href="/help">
+                <IconButton
+                  aria-label={"Ayuda"}
+                  icon={<QuestionOutlineIcon />}
+                  size={"xs"}
+                />
+              </Link>
+              <ToggleColor />
+            </Box>
           </HeaderStyled>
 
           <MainStyled>
@@ -84,8 +95,6 @@ function MyApp({ Component, pageProps }: AppProps) {
               </a>
             </p>
           </FooterStyled>
-
-          <ToastContainer />
         </ContainerStyled>
       </Container>
     </ChakraProvider>

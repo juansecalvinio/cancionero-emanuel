@@ -1,5 +1,4 @@
 import React, { MouseEvent, useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -11,6 +10,7 @@ import {
   Link,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { FaSpotify, FaYoutube } from "react-icons/fa";
@@ -38,6 +38,7 @@ interface SongDetailsProps {
 }
 
 export const SongDetails = ({ song }: SongDetailsProps) => {
+  const toast = useToast();
   const router = useRouter();
 
   const [spinnerButton, setSpinnerButton] = useState<boolean>(false);
@@ -104,29 +105,23 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
       });
       setSpinnerButton(false);
       setIsModalChangeTone(false);
-      toast.success(`Se cambió la tonalidad de la canción a: ${tone}`, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
+      toast({
+        title: `Se cambió la tonalidad de la canción a: ${tone}`,
+        position: "bottom",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
       });
       router.push("/");
     } catch (error) {
       setSpinnerButton(false);
       console.error(error);
-      toast.error("Ocurrió un error, intentá de nuevo en unos minutos", {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
+      toast({
+        title: `Ocurrió un error, intentá de nuevo en unos minutos`,
+        position: "bottom",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
       });
     }
   };
