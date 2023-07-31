@@ -136,8 +136,16 @@ export function transposeChord({
   const newIndex = (index + semitones + chords.length) % chords.length;
   let newChord = chords[newIndex];
 
-  if (chord.includes("m") && !newChord.includes("m")) {
+  if (
+    chord.includes("m") &&
+    !newChord.includes("m") &&
+    !newChord.includes("#")
+  ) {
     newChord += "m";
+  }
+
+  if (!chord.includes("m") && newChord.includes("m")) {
+    newChord = newChord.replace("m", "");
   }
 
   return newChord;
