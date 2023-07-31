@@ -54,7 +54,7 @@ export const HelpPage = () => {
           formato:
         </Text>
         <Stack mb={"1.5rem"}>
-          <Code>Solo[LA] un momento en tu pres[MI]encia</Code>
+          <Code>Solo[LA] un momento en tu prese[MI]ncia</Code>
         </Stack>
         <Text mb={"1.5rem"}>Y esto se vería de la siguiente manera:</Text>
         <Stack
