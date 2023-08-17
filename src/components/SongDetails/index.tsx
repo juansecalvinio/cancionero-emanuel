@@ -276,10 +276,17 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
               }}
             >
               {line.chords.map((chord: any, j: any) => {
-                const marginLeft =
-                  j === 0
-                    ? chord.position * 6
-                    : (chord.position - line.chords[j - 1].position) * 3;
+                const position = chord.position * 0.9;
+                let marginLeft = position - 10;
+
+                if (j === 0) {
+                  marginLeft = position * 7;
+                }
+
+                if (j === 1) {
+                  marginLeft = position * 4;
+                }
+
                 return (
                   <div
                     key={j}

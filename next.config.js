@@ -5,9 +5,6 @@ const nextConfig = {
   compiler: {
     styledComponents: true
   },
-  images: {
-    domains: ["drive.google.com"]
-  }
 }
 
 module.exports = nextConfig
